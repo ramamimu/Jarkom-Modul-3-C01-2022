@@ -1,22 +1,20 @@
-echo '
-auto eth0
-iface eth0 inet dhcp
+# auto eth0
+# iface eth0 inet dhcp
 
-auto eth1
-iface eth1 inet static
-	address 10.10.1.1
-	netmask 255.255.255.0
+# auto eth1
+# iface eth1 inet static
+# 	address 10.10.1.1
+# 	netmask 255.255.255.0
 
-auto eth2
-iface eth2 inet static
-	address 10.10.2.1
-	netmask 255.255.255.0
+# auto eth2
+# iface eth2 inet static
+# 	address 10.10.2.1
+# 	netmask 255.255.255.0
 
-auto eth3
-iface eth3 inet static
-	address 10.10.3.1
-	netmask 255.255.255.0
-' > /etc/network/interfaces
+# auto eth3
+# iface eth3 inet static
+# 	address 10.10.3.1
+# 	netmask 255.255.255.0
 
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 10.10.0.0/16
 
