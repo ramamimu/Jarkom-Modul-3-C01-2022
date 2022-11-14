@@ -41,3 +41,34 @@
 > 2. Adapun pada hari dan jam kerja sesuai nomor (1), client hanya dapat mengakses domain loid-work.com dan franky-work.com
 
 ![](/img/B.2.1.png)
+
+> 3. Saat akses internet dibuka, client dilarang untuk mengakses web tanpa HTTPS. (Contoh web HTTP: http://example.com)  
+
+HTTPS menggunakan port 443, oleh karena itu nomor ini dapat dilakukan dengan cara blokir akses web selain pada port 443  
+Pada `/etc/squid/acl.conf`, tambahkan
+```
+acl SSL_ports port 443
+```
+Lalu di `/etc/squid/squid.conf`, tambahkan
+```
+http_access deny !SSL_ports
+```
+![](/img/B.3.1.png)
+> 4. Agar menghemat penggunaan, akses internet dibatasi dengan kecepatan maksimum 128 Kbps pada setiap host (Kbps = kilobit per second; lakukan pengecekan pada tiap host, ketika 2 host akses internet pada saat bersamaan, keduanya mendapatkan speed maksimal yaitu 128 Kbps)
+> 5. Setelah diterapkan, ternyata peraturan nomor (4) mengganggu produktifitas saat hari kerja, dengan demikian pembatasan kecepatan hanya diberlakukan untuk pengaksesan internet pada hari libur  
+
+Definisikan hari yang mau dibatasi di acl.conf
+```
+acl NO_LIMIT_DAYS time MTWHF
+```
+Lalu menambahkan bari berikut untuk membatasi internet menjadi 128 kbps
+```
+delay_pools 1
+delay_class 1 2
+delay_access 1 allow all !NO_LIMIT_DAYS
+delay_parameters 1 none 16000/16000
+```
+Koneksi internet pada hari senin di luar jam kerja  
+![](/img/B.4.1.png)  
+Koneksi internet pada hari sabtu  
+![](/img/B.4.2.png)  
